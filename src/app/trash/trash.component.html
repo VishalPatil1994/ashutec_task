@@ -1,0 +1,42 @@
+<ng-container>
+    <app-header></app-header>
+</ng-container>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <ng-container *ngIf="productList">
+                    <div class="col-md-4" *ngFor="let item of productList | showDeleted;let i=index">
+                        <ng-container>
+                            <div class="card">
+                                <div (click)="gs.navigateById('product-details',item?.id,item)">
+                                    <img class="card-img-top rounded mx-auto d-block img-responsive mt-3"
+                                        [src]="item?.product_image" alt="Card image cap" height="300px" width="300px">
+                                </div>
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <h5 class="card-title">{{item?.product_name}}</h5>
+                                        </div>
+                                        <div>
+                                            <h5 class="card-title">Rs {{item?.product_price}}</h5>
+                                        </div>
+                                    </div>
+                                    <p class="card-text">{{item?.product_desc}}</p>
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <i class="bi bi-arrow-up-left-circle" title="Restore" (click)="restoreProduct(item)"></i>
+                                        </div>
+                                        <div>
+                                            <i class="bi bi-trash" title="Delete"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-container>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,199 @@
+<ng-container>
+    <app-header></app-header>
+</ng-container>
+<div class="container">
+    <div class="form-row align-items-center">
+        <div class="col-md-9">
+            <div class="input-group mb-4 mt-2">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">Search Products</div>
+                </div>
+                <input class="form-control" [(ngModel)]="query" placeholder="Please enter any product name to search ">
+            </div>
+        </div>
+        <div class="col-md-3">
+
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col md-3">
+            <p (click)="clearFilter()" style="cursor: pointer;">Clear All</p>
+<div>
+    <h3>Filter by price</h3>
+    <div class="d-flex justify-content-between">
+        <div class="form-group">
+           
+            <select class="form-control" id="exampleFormControlSelect1" [(ngModel)]="minPrice">
+              <option *ngFor="let item of minPriceArray" [value]="item">{{item}}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <select class="form-control" id="exampleFormControlSelect1" [(ngModel)]="maxPrice" [disabled]="!minPrice" (change)="filterProduct('price')">
+                <option *ngFor="let item of maxPriceArray" [value]="item">{{item}}</option>
+              </select>
+          </div>
+    </div>
+    <div class="mt-4">
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="instockk" id="exampleRadios11" value="instockk" (click)="filterProduct('instock')">
+            <label class="form-check-label" for="exampleRadios11">In stock</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="instockk" id="exampleRadios22" value="outstockk" (click)="filterProduct('oos')">
+            <label class="form-check-label" for="exampleRadios22">Out of stock </label>
+        </div>
+    </div>
+   
+</div>
+        </div>
+        <div class="col-md-9">
+            <div class="row">
+                <ng-container *ngIf="productList">
+                    <div class="col-md-4" *ngFor="let item of productList | filter | search : query;let i=index">
+                        <ng-container>
+                            <div class="card">
+                                <div (click)="gs.navigateById('product-details',item?.id,item)">
+                                    <img class="card-img-top rounded mx-auto d-block img-responsive mt-3"
+                                        [src]="item?.product_image" alt="Card image cap" height="300px" width="300px">
+                                </div>
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <h3 class="card-title">{{item?.product_name}}</h3>
+                                        </div>
+                                        <div>
+                                            <h5 class="card-title">Rs {{item?.product_price}}</h5>
+                                        </div>
+                                    </div>
+                                    <p class="card-text">{{item?.product_desc}}</p>
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <i class="bi bi-hand-thumbs-up" title="like"
+                                                (click)="likeDislike(item,'Added to liked')" *ngIf="!item?.liked"></i>
+                                            <i class="bi bi-hand-thumbs-up-fill" title="dislike"
+                                                (click)="likeDislike(item,'Removed from liked')" *ngIf="item?.liked"></i>
+                                        </div>
+                                        <div>
+                                            <i class="bi bi-pencil" title="Edit" (click)="editProduct(item,'Edit')"></i>
+                                        </div>
+                                        <div>
+                                            <i class="bi bi-trash" (click)="showHideForm(undefined,'confirm',item)"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-container>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+</div>
+<a class="fixedButton">
+    <div class="roundedFixedBtn"><i class="bi bi-plus-circle" title="Add Product" (click)="showHideForm('Add')"></i></div>
+</a>
+
+<div id="myModal" class="modal" *ngIf="formShowHide">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+        <div class="d-flex justify-content-between">
+            <div>
+                <h4>{{formType}} Product</h4>
+            </div>
+            <div>
+                <span class="close" (click)="showHideForm()">&times;</span>
+            </div>
+        </div>
+        <div>
+            <form [formGroup]="productForm">
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Product Title</label>
+                    <input type="text" class="form-control" placeholder="Enter product title"
+                        formControlName="product_name">
+                        <div *ngIf="myForm?.product_name?.invalid && (myForm?.product_name?.dirty || myForm?.product_name?.touched)" >
+                            <span *ngIf="myForm?.product_name?.errors?.['required']" class="err-msg">
+                                Name is required.
+                            </span>
+                            <span *ngIf="myForm?.product_name?.errors?.['maxlength']" class="err-msg">
+                                Only upto 50 characters allowed
+                            </span>
+                        </div>
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputPassword1">Price</label>
+                    <input type="number" class="form-control" placeholder="Price" formControlName="product_price">
+                    <div *ngIf="myForm?.product_price?.invalid && (myForm?.product_price?.dirty || myForm?.product_price?.touched)" >
+                        <span *ngIf="myForm?.product_price?.errors?.['required']" class="err-msg">
+                            Price is required.
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputPassword1">Image Url</label>
+                    <input type="text" class="form-control" placeholder="Image url" formControlName="product_image">
+                    <div *ngIf="myForm?.product_image?.invalid && (myForm?.product_image?.dirty || myForm?.product_image?.touched)" >
+                        <span *ngIf="myForm?.product_image?.errors?.['required']" class="err-msg">
+                            Image is required.
+                        </span>
+                        <span *ngIf="myForm?.product_image?.errors?.['pattern']" class="err-msg">
+                            Enter valid url
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="exampleFormControlTextarea1">Description</label>
+                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
+                        formControlName="product_desc"></textarea>
+                        <div *ngIf="myForm?.product_desc?.invalid && (myForm?.product_desc?.dirty || myForm?.product_desc?.touched)" >
+                            <span *ngIf="myForm?.product_desc?.errors?.['required']" class="err-msg">
+                                Product Description is required.
+                            </span>
+                            <span *ngIf="myForm?.product_desc?.errors?.['minlength']" class="err-msg">
+                                Minimun 150 characters needed.
+                            </span>
+                        </div>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="instock" [value]=1  formControlName="instock" >
+                    <label class="form-check-label" for="exampleRadios1">
+                        In stock
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="instock" [value]=0  formControlName="instock">
+                    <label class="form-check-label" for="exampleRadios2">
+                        Out of stock
+                    </label>
+                </div>
+                <button type="button" class="btn btn-primary" (click)="submitForm()" *ngIf="formType==='Add'">Submit</button>
+                <button type="button" class="btn btn-primary" (click)="updateForm()" *ngIf="formType==='Edit'">Update</button>
+
+            </form>
+        </div>
+    </div>
+
+</div>
+
+<div id="deleteModal" class="modal" *ngIf="confirmShowHide">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+        <div class="">
+            <div class="modal-header">
+              <h2 class="modal-title" id="exampleModalLabel">Delete Product </h2>
+             
+            </div>
+            <div class="modal-body">
+             You sure ? want to delete this product ?
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="showHideForm(undefined,'confirm')">Close</button>
+              <button type="button" class="btn btn-primary" (click)="deleteProduct() ">Confirm</button>
+            </div>
+          </div>
+    </div>
+
+</div>
