@@ -25,7 +25,7 @@
     <div class="d-flex justify-content-between">
         <div class="form-group">
            
-            <select class="form-control" id="exampleFormControlSelect1" [(ngModel)]="minPrice">
+            <select class="form-control" id="exampleFormControlSelect1" [(ngModel)]="minPrice" (change)="filterProduct('price')">
               <option *ngFor="let item of minPriceArray" [value]="item">{{item}}</option>
             </select>
           </div>
@@ -37,7 +37,7 @@
     </div>
     <div class="mt-4">
         <div class="form-check">
-            <input class="form-check-input" type="radio" name="instockk" id="exampleRadios11" value="instockk" (click)="filterProduct('instock')">
+            <input class="form-check-input" type="radio" name="instockk" id="exampleRadios11" value="instockk" (click)="filterProduct('inStock')">
             <label class="form-check-label" for="exampleRadios11">In stock</label>
         </div>
         <div class="form-check">
@@ -49,16 +49,16 @@
 </div>
         </div>
         <div class="col-md-9">
-            <div class="row">
+            <div class="row gy-3">
                 <ng-container *ngIf="productList">
-                    <div class="col-md-4" *ngFor="let item of productList | filter | search : query;let i=index">
+                    <div class="col-sm-4 py-2" *ngFor="let item of productList | filter | search : query;let i=index">
                         <ng-container>
-                            <div class="card">
+                            <div class="card h-100">
                                 <div (click)="gs.navigateById('product-details',item?.id,item)">
-                                    <img class="card-img-top rounded mx-auto d-block img-responsive mt-3"
+                                    <img class="card-img-top  mt-3"
                                         [src]="item?.product_image" alt="Card image cap" height="300px" width="300px">
                                 </div>
-                                <div class="card-body">
+                                <div class="card-body ">
                                     <div class="d-flex justify-content-between">
                                         <div>
                                             <h3 class="card-title">{{item?.product_name}}</h3>

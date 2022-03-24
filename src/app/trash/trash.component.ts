@@ -11,14 +11,14 @@ export class TrashComponent implements OnInit {
   constructor(public gs: GlobalService) { }
   productList: any
   ngOnInit(): void {
-    this.productList = this.gs.getProductsFromLOcalStorage()
+    this.productList = this.gs.getProductsFromLocalStorage()
   }
 
   restoreProduct(val: any) {
     val.deleted = false;
     this.gs.showToastMsg('Product restored successfully','Success')
     localStorage.setItem('product-list', JSON.stringify(this.productList));
-    this.productList=this.gs.getProductsFromLOcalStorage()
+    this.productList=this.gs.getProductsFromLocalStorage()
   }
   
 

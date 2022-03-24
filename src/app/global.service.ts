@@ -21,7 +21,7 @@ export class GlobalService {
       this.toastr.error(val,type)
     }
   }
-  getProductsFromLOcalStorage() {
+  getProductsFromLocalStorage() {
     return JSON.parse(localStorage.getItem("product-list") || '[]')
   }
 }
